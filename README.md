@@ -78,17 +78,16 @@ print(result)
 ```
 
 Future Plans
-	•	Release minimal Python module (steme_core.py)
-	•	Provide OpenAI + SBERT embedding compatibility
-	•	Add vector cluster support
-	•	Enable real-time belief/emotion monitoring for agent networks
-	•	Draft research paper for Sapir-Whorf analysis using STEME
-	•	Package as lightweight plugin for AI reflection frameworks
+- Release minimal Python module (steme_core.py)
+- Provide OpenAI + SBERT embedding compatibility
+- Add vector cluster support
+- Enable real-time belief/emotion monitoring for agent networks
+- Draft research paper for Sapir-Whorf analysis using STEME
+- Package as lightweight plugin for AI reflection frameworks
 
 ⸻
 
 Credits
-
 Designed by Tim Chen
 Originally created as part of the Civilizism simulation project
 Now released as a standalone universal tool for semantic vector tagging.
@@ -96,16 +95,8 @@ Now released as a standalone universal tool for semantic vector tagging.
 ⸻
 
 License
-
 MIT License (flexible for open integration)
 
 ⸻
 
 “Tags are Coordinates, Not Definitions"
-
-
-
-
-
-
-
