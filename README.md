@@ -22,13 +22,11 @@ STEME was built on a simple idea:
 > **STEME tells you where it points.**
 
 It takes:
-- An embedded input (a sentence, statement, or conceptual cluster)
-- A tag pool (words, phrases, categories, emotional tones, ideologies, etc.)
+- An input string or embedding (a sentence, a belief, a reflection…)
+- A pool of tags or content to compare against (emotions, ideologies, memory logs…)
 
 It returns:
-- The most semantically aligned tag(s), using cosine similarity.
-
-That’s it. No language model, no hidden weights—just location-based labeling.
+- The most semantically aligned item(s), using cosine similarity.
 
 ---
 
@@ -38,65 +36,84 @@ STEME is not a model. It’s a **projection engine**.
 
 It can work with:
 - Individual sentences
-- Averaged embeddings from memory clusters
-- Translated expressions
-- Visual captions (as long as embedding is compatible)
-- Any vector-based representation of meaning
+- Memory clusters (vector-averaged)
+- Cross-lingual inputs
+- Visual captions (via compatible embedding)
+- Any vector-based conceptual content
 
 It can map them to:
 - Emotional categories
-- Political or philosophical positions
-- Cognitive biases
-- Cultural values
-- Affective tones
-- Abstract principles like “freedom,” “order,” “faith,” or “submission”
+- Philosophical stances
+- Cognitive frames
+- Abstract ideals like “justice”, “hope”, “order”, or “freedom”
 
 ---
 
-## Use Cases
-
-- **Civilizism Simulation Engine**: Assigning emotional/belief tags to clusters of agent memory in social sandbox simulations
-- **Sapir-Whorf Hypothesis Testing**: Comparing semantic drift across languages or vocabulary limitations
-- **Education**: Tagging tone and cognitive bias in student writing across different levels
-- **Social Sentiment Drift**: Monitoring belief evolution over time in social media or corpora
-
----
-
-## Example (Coming Soon)
-
-You’ll be able to do something like:
+## 🔧 Key APIs
 
 ```python
-from steme_core import get_closest_tag
+embed(text: str) → np.ndarray
+STEME(query: str or vector, pool: list[str or dict], top_k=3) → [(score, item)]
+STEME3x(text_a, text_b, text_c) → float  # Triadic cohesion
+STEMEnx(list_of_texts) → float           # N-way cohesion
+```
+All methods return cosine-based similarity between -1 and 1 (usually in [0, 1] for well-formed embeddings).
 
-embedding = get_embedding("Freedom requires responsibility.")
-tag_pool = ["freedom", "chaos", "equality", "discipline", "hope"]
-result = get_closest_tag(embedding, tag_pool)
+---
 
-print(result)
-# -> 'freedom' (cosine: 0.92)
+## 🚀 Example Usage
+```python
+from steme_core import STEME, STEMEnx
+
+texts = ["I love music", "Sound makes me happy", "Silence is golden"]
+query = "I enjoy listening to tunes"
+
+print("Top matches:")
+for sim, match in STEME(query, texts):
+    print(f"{sim:.3f} → {match['content']}")
+
+print("\nSemantic cohesion of list:")
+print(STEMEnx(texts))
 ```
 
-Future Plans
-- Release minimal Python module (steme_core.py)
-- Provide OpenAI + SBERT embedding compatibility
-- Add vector cluster support
-- Enable real-time belief/emotion monitoring for agent networks
-- Draft research paper for Sapir-Whorf analysis using STEME
-- Package as lightweight plugin for AI reflection frameworks
+---
 
-⸻
+## 🧠 Use Cases
+- Civilizism Simulation Engine: Semantic memory tagging for AI social agents
+- Belief Conflict Detection: Identify incompatible ideas in cognitive systems
+- Sentiment & Emotion Modeling: Tagging emotional tone or psychological state
+- Educational NLP: Assessing student writing by concept drift and tone
+- Sapir-Whorf Research: Testing cross-language semantic anchoring
 
-Credits
-Designed by Tim Chen
-Originally created as part of the Civilizism simulation project
-Now released as a standalone universal tool for semantic vector tagging.
+---
 
-⸻
+## 🗺️ Future Plans
+- Add support for alternate embedding backends (OpenAI, Claude, etc.)
+- Expose low-level vector utilities and cluster monitoring
+- Package as plugin for cognitive simulation platforms
+- Long-term: paper on belief coherence + Sapir-Whorf applications
 
-License
-MIT License (flexible for open integration)
+---
 
-⸻
+## ⛓️ Installation
+STEME requires the following:
+```python
+pip install sentence-transformers scikit-learn numpy
+```
 
-“Tags are Coordinates, Not Definitions"
+---
+
+## 📜 License
+MIT License – open, permissive, and integration-friendly.\
+Use it, fork it, plug it into your brain.
+
+---
+
+## 🙌 Credits
+Created by Tim Chen\
+Originally designed for the Civilizism Project\
+Now released as a standalone toolkit for cognition-oriented NLP.
+
+---
+
+“Tags are Coordinates, Not Definitions.”
