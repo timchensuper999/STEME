@@ -111,9 +111,9 @@ Use it, fork it, plug it into your brain.
 
 ## 🙌 Credits
 Created by Tim Chen\
-Originally designed for the Civilizism Project\
+Originally designed for the [Civilizism Project]{https://github.com/timchensuper999/Civilizism}\
 Now released as a standalone toolkit for cognition-oriented NLP.
 
 ---
 
-“Tags are Coordinates, Not Definitions.”
+> “Tags are Coordinates, Not Definitions.”
