@@ -32,3 +32,21 @@ We evaluated **STEME** on a fixed semantic tagging dataset with four trivial bas
 - all-MiniLM-L6-v2 delivered the best accuracy (0.704 F1) at high throughput (>3300 items/sec).
 - Even the smallest model (bge-small-en) achieved nearly 3× the accuracy of Random while running in ~2.8k items/sec.
 - STEME performance scales predictably with embedding model capacity; model choice can be tuned to trade accuracy vs throughput.
+
+## eproducing the Benchmarks
+
+Run the benchmark script with a chosen model:
+
+```bash
+# Example with all-MiniLM-L6-v2
+.\.venv\Scripts\python.exe -X dev testings\bench_steme.py --n 2000 --model-name "all-MiniLM-L6-v2"
+```
+Use --out to save results as JSON and --plot to visualize:
+```bash
+.\.venv\Scripts\python.exe -X dev testings\bench_steme.py --n 2000 --model-name "all-MiniLM-L6-v2" --out benchmarks\run.json --plot
+```
+Then in `bench_steme.py` you just keep the argparse help text clean and generic, e.g.:
+```python
+parser.add_argument("--n", type=int, default=2000, help="Number of test samples")
+parser.add_argument("--model-name", type=str, required=True, help="HuggingFace model name")
+```
