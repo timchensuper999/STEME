@@ -4,7 +4,7 @@
 
 ---
 
-## Semantic Tagging Embedding Model Engine
+## Semantic Transformation & Evaluation Mapping Engine
 
 STEME is a lightweight, deterministic module for **semantic tag assignment** using embedding vector similarity.  
 It works by locating where your statement lives in vector space—and identifying which tag it’s closest to.
@@ -88,7 +88,7 @@ print(STEMEnx(texts))
 ---
 
 ## 🗺️ Future Plans
-- Add support for alternate embedding backends (OpenAI, Claude, etc.)
+- Add support for alternate embedding backends (OpenAI, Gemini, Claude, etc.)
 - Expose low-level vector utilities and cluster monitoring
 - Package as plugin for cognitive simulation platforms
 - Long-term: paper on belief coherence + Sapir-Whorf applications
