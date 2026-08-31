@@ -1,0 +1,21 @@
+{
+  "model_name": "BAAI/bge-small-en",
+  "n_items": 2000,
+  "tag_count": 5,
+  "embedding": {
+    "throughput_items_per_s": 845.6062510661792,
+    "latency_ms_p50": 0.006600050255656242,
+    "latency_ms_p95": 0.017405010294169184
+  },
+  "steme": {
+    "throughput_items_per_s": 785.049023985832,
+    "latency_ms_p50": 1.013800036162138,
+    "latency_ms_p95": 2.1740950236562635
+  },
+  "f1_micro": 0.8025,
+  "peak_rss_mb_observed": 550.265625,
+  "python_version": "3.13.3",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "timestamp": 1788167297.7228868
+}

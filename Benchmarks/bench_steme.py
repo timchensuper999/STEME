@@ -1,4 +1,4 @@
-# testings/bench_steme.py
+# Benchmarks/bench_steme.py
 import argparse, json, time, sys, os, platform
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from pathlib import Path
@@ -11,27 +11,76 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import normalize as sk_normalize
 
 # Import from your shipped STEME
-from sysMod.stemeKit import embed, STEME, setModel
+from steme_core import embed, STEME, setModel
 
 # Replace your gen_synth with this:
 TAGS = ["sports", "technology", "finance", "entertainment", "world news"]
-LEX = {
-    "sports":        ["match", "coach", "league", "score", "tournament"],
-    "technology":    ["startup", "software", "AI", "developer", "chip"],
-    "finance":       ["market", "stocks", "bond", "inflation", "earnings"],
-    "entertainment": ["film", "series", "music", "celebrity", "box office"],
-    "world news":    ["summit", "diplomacy", "election", "policy", "conflict"],
+
+# Full sentence templates per class, written to share surface vocabulary across
+# classes (hard negatives) — e.g. "market" shows up in both finance and sports
+# ("the transfer market"), so classification has to rely on meaning, not keyword hits.
+SENTENCES = {
+    "sports": [
+        "The coach benched the star player after a disappointing loss.",
+        "Fans filled the stadium for the championship match.",
+        "The transfer market saw a record bid for the young striker.",
+        "Her comeback in the final set stunned the tournament crowd.",
+        "The league announced a new schedule for next season.",
+        "He broke the national record in the 400-meter sprint.",
+        "The referee's controversial call decided the match.",
+        "The team celebrated their promotion with a parade downtown.",
+    ],
+    "technology": [
+        "The startup raised a new funding round to scale its infrastructure.",
+        "Developers pushed an emergency patch after the outage.",
+        "The chipmaker unveiled a faster processor at the conference.",
+        "Engineers debated the tradeoffs of the new database architecture.",
+        "The app's latest update introduced end-to-end encryption.",
+        "A security researcher disclosed a critical vulnerability in the library.",
+        "The company open-sourced its internal machine learning toolkit.",
+        "Cloud outages disrupted service for several major platforms.",
+    ],
+    "finance": [
+        "The central bank raised interest rates to curb inflation.",
+        "Shares tumbled after the company missed earnings expectations.",
+        "Investors piled into bonds amid recession fears.",
+        "The merger created one of the largest firms in the sector.",
+        "Analysts warned the housing market was overheating.",
+        "The startup's valuation doubled after its latest funding round.",
+        "Regulators fined the bank for reporting violations.",
+        "Currency markets reacted sharply to the trade announcement.",
+    ],
+    "entertainment": [
+        "The film swept the major categories at the awards show.",
+        "The band announced a world tour starting next spring.",
+        "Critics praised the series' unexpected finale.",
+        "The celebrity's new album debuted at the top of the charts.",
+        "Box office numbers fell short of the studio's projections.",
+        "The director confirmed a sequel is already in production.",
+        "Streaming platforms are competing for exclusive premiere rights.",
+        "The festival lineup drew record crowds this year.",
+    ],
+    "world news": [
+        "Leaders met at the summit to discuss the ongoing conflict.",
+        "The election results triggered protests in the capital.",
+        "Diplomats negotiated a ceasefire after weeks of talks.",
+        "The government unveiled a new policy on immigration.",
+        "Tensions rose after the border dispute escalated.",
+        "The UN called for an emergency session over the crisis.",
+        "A coalition of nations pledged aid to the affected region.",
+        "The treaty was signed after months of negotiation.",
+    ],
 }
 
 def gen_synth(n, tags=TAGS):
     import numpy as np
     rng = np.random.default_rng(42)
-    junk = ["alpha","beta","gamma","delta","omega"]
     X, y = [], []
     for _ in range(n):
         t = tags[int(rng.integers(0, len(tags)))]
-        word = rng.choice(LEX[t])
-        X.append(f"{word} {rng.choice(junk)} {rng.integers(0,1000)}")  # no tag token
+        pool = SENTENCES[t]
+        sentence = pool[int(rng.integers(0, len(pool)))]
+        X.append(sentence)
         y.append(t)
     return X, y
 
@@ -129,9 +178,6 @@ def measure(n, model_name, out_json, make_plot):
     # --- STEME stage ---
     st_lat_ms = []
     preds = []
-    # --- STEME stage ---
-    st_lat_ms = []
-    preds = []
 
     def _as_label(item):
         # STEME returns (sim, item); item might be dict or string
@@ -164,8 +210,8 @@ def measure(n, model_name, out_json, make_plot):
 
     out = {
         "model_name": model_name,
-        "n_items": int(len(preds)),
-        "tag_count": int(len(TAGS)),
+        "n_items": len(preds),
+        "tag_count": len(TAGS),
         "embedding": {
             "throughput_items_per_s": emb_thr,
             "latency_ms_p50": emb_p50,
@@ -214,7 +260,7 @@ def measure(n, model_name, out_json, make_plot):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=2000, help="number of texts")
-    ap.add_argument("--out", type=str, default="benchmarks/steme_run.json")
+    ap.add_argument("--out", type=str, default="Benchmarks/steme_run.json")
     ap.add_argument("--plot", action="store_true")
     ap.add_argument("--model-name", type=str, default="BAAI/bge-small-en")
     args = ap.parse_args()

@@ -52,12 +52,25 @@ It can map them to:
 ## 🔧 Key APIs
 
 ```python
-embed(text: str) → np.ndarray
-STEME(query: str or vector, pool: list[str or dict], top_k=3) → [(score, item)]
-STEME3x(text_a, text_b, text_c) → float  # Triadic cohesion
-STEMEnx(list_of_texts) → float           # N-way cohesion
+embed(text: str, model=None) → np.ndarray
+STEME(query: str or vector, pool: list[str or dict], top_k=3, raw=False) → [(score, item)]
+STEME3x(text_a, text_b, text_c) → float          # Triadic cohesion
+STEMEnx(list_of_texts) → float                   # N-way cohesion
+STEME_nli(text, labels, top_k=1, multi_label=False) → [(score, {"content": label})]
+STEME_emotion(text, top_k=1) → [(score, emotion_label)]
+STEME_trait(content, trait_data) → float         # Power-scaled trait signal in [-1, 1]
+inverse_embed(embedding, top_k=3) → [(score, cached_text)]
+setModel(model_name, revision=None)              # swap embedding backend, clears cache
 ```
-All methods return cosine-based similarity between -1 and 1 (usually in [0, 1] for well-formed embeddings).
+
+`STEME`'s cosine similarities are stretched through a `tanh` curve centered on the
+embedding model's typical similarity band (pass `raw=True` for untouched cosine values
+instead — use that when the score is a magnitude, not just a ranking key).
+
+`STEME_nli` and `STEME_emotion` don't use cosine similarity at all — they run zero-shot
+NLI (`cross-encoder/nli-deberta-v3-small`) and a discriminative emotion classifier
+(`SamLowe/roberta-base-go_emotions`) respectively, for when you need implication or
+trained affect detection rather than vector proximity.
 
 ---
 
@@ -96,10 +109,16 @@ print(STEMEnx(texts))
 ---
 
 ## ⛓️ Installation
-STEME requires the following:
-```python
-pip install sentence-transformers scikit-learn numpy
+```bash
+pip install git+https://github.com/tim-chen-yen-ting/steme.git
 ```
+Or from source:
+```bash
+pip install sentence-transformers scikit-learn numpy transformers
+```
+Default embedding model is `BAAI/bge-small-en`, pinned to a specific revision so
+embeddings don't silently drift if the weights on the Hub are updated. Swap models
+at runtime with `setModel(model_name, revision=None)`.
 
 ---
 
